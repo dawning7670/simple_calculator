@@ -1,5 +1,6 @@
 import calculator._
 import org.scalatest.FlatSpec
+import org.scalatest.Matchers._
 
 /**
   * Created by dawning on 2017/7/25.
@@ -12,41 +13,33 @@ class ParserTest extends FlatSpec {
     parse(Tokenizer.read(in))
   }
 
-  //  "[1 + 2], [1 + 2 - 3], [1 * 2 + 3], [2 + 3 * 4]" should "match expr" in {
-  //    tokens = Tokenizer.read("1 + 2")
-  //    assert(expr())
-  //    tokens = Tokenizer.read("1 + 2 - 3")
-  //    assert(expr())
-  //    tokens = Tokenizer.read("1 * 2 + 3")
-  //    assert(expr())
-  //    tokens = Tokenizer.read("2 + 3 * 4")
-  //    assert(expr())
-  //  }
-  //
-  //  "[+ 2], [2 +], [1 + 2;]" should "throw Error" in {
-  //    assertThrows[Error] {
-  //      tokens = Tokenizer.read("+ 2")
-  //      expr()
-  //    }
-  //    assertThrows[Error] {
-  //      tokens = Tokenizer.read("2 +")
-  //      expr()
-  //    }
-  //    assertThrows[Error] {
-  //      tokens = Tokenizer.read("1 + 2;")
-  //      expr()
-  //    }
-  //  }
+    "[1 + 2]" should "equal Expr(Term(Factor(1), Empty, Empty),Plus,Expr(Term(Factor(2), Empty, Empty), Empty, Empty))" in {
+      buildAST("1 + 2") should equal (Expr(
+        Term(Factor(1), Empty, Empty),
+        Plus,
+        Expr(Term(Factor(2), Empty, Empty), Empty, Empty)))
+    }
 
-  //  "1 + 2" should "build AST Plus(1.0, 2.0)" in {
-  //    buildAST("1 + 2") should equal(PlusNode(LiteralNode(1.0), LiteralNode(2.0)))
-  //  }
-  //
-  //  "1 + 2 * 3" should "build AST Plus(1.0, Multi(2.0, 3.0))" in {
-  //    buildAST("1 + 2 * 3") should equal(PlusNode(LiteralNode(1.0), MultiNode(LiteralNode(2.0), LiteralNode(3.0))))
-  //  }
-  //
-  //  "1 * 2 + 3" should "build AST Plus(Multi(1.0, 2.0), 3.0)" in {
-  //    buildAST("1 * 2 + 3") should equal(PlusNode(MultiNode(LiteralNode(1.0), LiteralNode(2.0)), LiteralNode(3.0)))
-  //  }
+  "1 * 2 - 3" should "equal Expr(Term(Factor(1),Multi,Term(Factor(2), Empty, Empty))," +
+    "Minus,Expr(Term(Factor(3), Empty, Empty),Empty,Empty))" in {
+    buildAST("1 * 2 - 3") should equal (Expr(
+      Term(Factor(1), Multi, Term(Factor(2), Empty, Empty)),
+      Minus,
+      Expr(
+        Term(Factor(3), Empty, Empty),
+        Empty,
+        Empty)))
+  }
+
+    "[+ 2], [2 +], [1 + 2;]" should "throw Error" in {
+      assertThrows[Error] {
+        buildAST("+ 2")
+      }
+      assertThrows[Error] {
+        buildAST("2 +")
+      }
+      assertThrows[Error] {
+        buildAST("1 + 2;")
+      }
+    }
 }
