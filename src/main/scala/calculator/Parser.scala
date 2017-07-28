@@ -10,13 +10,13 @@ import calculator.Tokenizer._
   * LL(1) Parser
   * Expr -> Expr + Term | Expr - Term | Term
   * Term -> Term * Factor | Term / Factor | Factor
-  * Factor -> literal
+  * Factor -> literal  | (Expr)
   *
   * Expr -> Term Expr'
   * Expr' -> + Term Expr' | - Term Expr' | NULL
   * Term -> Factor Term'
   * Term' -> * Factor Term' | / Factor Term' | NULL
-  * Factor -> literal
+  * Factor -> literal | (Expr)
   *
   * @return
   */
@@ -72,7 +72,12 @@ object Parser {
 
   def factor(tks: List[Token]): (AST, List[Token]) = tks match {
     case Literal(x) :: xs => (Factor(x), xs)
-    case x => throw new Error(s"excepted token $x")
+    case Open :: xs =>
+      val closePos = xs indexOf Close
+      require(closePos != -1, s"parentheses match error. $tks")
+      val (ls, rs) = xs.splitAt(xs indexOf Close)
+      (expr(ls)._1, rs.tail)
+    case _ => throw new Error(s"excepted token $tks")
   }
 
   def parse(tks: List[Token]): AST = expr(tks)._1
