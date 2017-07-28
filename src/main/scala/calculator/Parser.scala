@@ -41,8 +41,8 @@ object Parser {
   case class Factor(value: Double) extends AST
 
   def expr(tks: List[Token]): (AST, List[Token]) = {
-    val (termAST, xs) = term(tks)
-    exprTail(xs) match {
+    val (termAST, xs1) = term(tks)
+    exprTail(xs1) match {
       case (Empty, xs) => (Expr(termAST, Empty, Empty), xs)
       case (op, xs) => val (exprAST, xs1) = expr(xs)
         (Expr(termAST, op, exprAST), xs1)
