@@ -23,4 +23,8 @@ class CalculatorTest extends FlatSpec {
   "2 / 0" should "equal 6" in {
     calc("2 / 0") should be (Double.PositiveInfinity)
   }
+
+  "(1 + 2) * (3 + 4)" should "equal 21" in {
+    calc("(1 + 2) * (3 + 4)") should be (21)
+  }
 }

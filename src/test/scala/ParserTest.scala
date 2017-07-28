@@ -13,16 +13,16 @@ class ParserTest extends FlatSpec {
     parse(Tokenizer.read(in))
   }
 
-    "[1 + 2]" should "equal Expr(Term(Factor(1), Empty, Empty),Plus,Expr(Term(Factor(2), Empty, Empty), Empty, Empty))" in {
-      buildAST("1 + 2") should equal (Expr(
-        Term(Factor(1), Empty, Empty),
-        Plus,
-        Expr(Term(Factor(2), Empty, Empty), Empty, Empty)))
-    }
+  "[1 + 2]" should "equal Expr(Term(Factor(1), Empty, Empty),Plus,Expr(Term(Factor(2), Empty, Empty), Empty, Empty))" in {
+    buildAST("1 + 2") should equal(Expr(
+      Term(Factor(1), Empty, Empty),
+      Plus,
+      Expr(Term(Factor(2), Empty, Empty), Empty, Empty)))
+  }
 
   "1 * 2 - 3" should "equal Expr(Term(Factor(1),Multi,Term(Factor(2), Empty, Empty))," +
     "Minus,Expr(Term(Factor(3), Empty, Empty),Empty,Empty))" in {
-    buildAST("1 * 2 - 3") should equal (Expr(
+    buildAST("1 * 2 - 3") should equal(Expr(
       Term(Factor(1), Multi, Term(Factor(2), Empty, Empty)),
       Minus,
       Expr(
@@ -31,15 +31,19 @@ class ParserTest extends FlatSpec {
         Empty)))
   }
 
-    "[+ 2], [2 +], [1 + 2;]" should "throw Error" in {
-      assertThrows[Error] {
-        buildAST("+ 2")
-      }
-      assertThrows[Error] {
-        buildAST("2 +")
-      }
-      assertThrows[Error] {
-        buildAST("1 + 2;")
-      }
+  "(1)" should "equal Expr(Term(Expr(Term(Factor(1), Empty, Empty), Empty, Empty), Empty, Empty), Empty, Empty)" in {
+    buildAST("(1)") should equal (Expr(Term(Expr(Term(Factor(1), Empty, Empty), Empty, Empty), Empty, Empty), Empty, Empty))
+  }
+
+  "[+ 2], [2 +], [1 + 2;]" should "throw Error" in {
+    assertThrows[Error] {
+      buildAST("+ 2")
     }
+    assertThrows[Error] {
+      buildAST("2 +")
+    }
+    assertThrows[Error] {
+      buildAST("1 + 2;")
+    }
+  }
 }
