@@ -1,2 +1,2 @@
-# simple_interpreter
-a Simple Interpreter
+# simple calculator
+a simple calculator
